@@ -1,0 +1,89 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "TalentoPlus.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/TalentoPlus.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TalentoPlus.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TalentoPlus.Domain/1.0.0": {
+      "type": "project",
+      "path": "../TalentoPlus.Domain/TalentoPlus.Domain.csproj",
+      "msbuildProject": "../TalentoPlus.Domain/TalentoPlus.Domain.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "TalentoPlus.Domain >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "/home/Coder/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/home/Coder/Descargas/Employee_Management_System-TalentoPlus-S.A.S/src/TalentoPlus.Application/TalentoPlus.Application.csproj",
+      "projectName": "TalentoPlus.Application",
+      "projectPath": "/home/Coder/Descargas/Employee_Management_System-TalentoPlus-S.A.S/src/TalentoPlus.Application/TalentoPlus.Application.csproj",
+      "packagesPath": "/home/Coder/.nuget/packages/",
+      "outputPath": "/home/Coder/Descargas/Employee_Management_System-TalentoPlus-S.A.S/src/TalentoPlus.Application/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/home/Coder/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {
+            "/home/Coder/Descargas/Employee_Management_System-TalentoPlus-S.A.S/src/TalentoPlus.Domain/TalentoPlus.Domain.csproj": {
+              "projectPath": "/home/Coder/Descargas/Employee_Management_System-TalentoPlus-S.A.S/src/TalentoPlus.Domain/TalentoPlus.Domain.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.121/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
