@@ -17,6 +17,7 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task<List<Employee>> GetAllAsync(CancellationToken cancellationToken = default)
     {
+        // Eager load Department to avoid N+1 in service/UI.
         return await _context.Employees.Include(e => e.Department)
             .AsNoTracking()
             .ToListAsync(cancellationToken);

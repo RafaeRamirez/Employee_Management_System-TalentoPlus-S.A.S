@@ -24,6 +24,7 @@ public class AiProvider : IAiProvider
 
         if (string.IsNullOrWhiteSpace(apiUrl) || string.IsNullOrWhiteSpace(apiKey))
         {
+            // No external AI configured; fallback to deterministic heuristics.
             return BasicHeuristics(question);
         }
 

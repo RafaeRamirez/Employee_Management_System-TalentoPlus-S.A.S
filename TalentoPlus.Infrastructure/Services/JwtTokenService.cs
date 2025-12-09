@@ -23,6 +23,7 @@ public class JwtTokenService : IJwtTokenService
         var audience = _configuration["Jwt__Audience"] ?? "TalentoPlus.Client";
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
+        // Minimal JWT with symmetric signing; expiry controlled by caller.
         var tokenDescriptor = new JwtSecurityToken(
             issuer,
             audience,

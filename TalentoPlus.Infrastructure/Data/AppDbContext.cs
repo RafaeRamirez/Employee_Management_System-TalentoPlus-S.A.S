@@ -22,11 +22,13 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
         builder.Entity<Department>(entity =>
         {
+            // Department is a simple lookup; only name is required.
             entity.Property(d => d.Name).IsRequired().HasMaxLength(150);
         });
 
         builder.Entity<Employee>(entity =>
         {
+            // Enforce unique document and reasonable field lengths; default enums for status and education.
             entity.HasIndex(e => e.Document).IsUnique();
             entity.Property(e => e.Document).IsRequired().HasMaxLength(50);
             entity.Property(e => e.FirstName).IsRequired().HasMaxLength(100);

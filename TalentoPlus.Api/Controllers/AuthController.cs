@@ -18,6 +18,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken cancellationToken)
     {
+        // Self-registration returns a JWT so the employee can consume protected endpoints right away.
         var token = await _authService.RegisterEmployeeAsync(request, cancellationToken);
         return Ok(new { token });
     }

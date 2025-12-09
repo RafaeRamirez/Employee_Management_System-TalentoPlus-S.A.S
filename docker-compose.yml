@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -8,7 +6,8 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: talentoplus
     ports:
-      - "5432:5432"
+      # Use a non-default host port to avoid conflicts; override with POSTGRES_HOST_PORT if needed.
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 

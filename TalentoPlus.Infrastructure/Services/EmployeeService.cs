@@ -120,6 +120,7 @@ public class EmployeeService : IEmployeeService
             }
         }
 
+        // Each row becomes an upsert: create department if missing, update existing employee by Document or insert if new.
         foreach (var row in worksheet.RowsUsed().Skip(1))
         {
             var document = row.Cell("A").GetString().Trim();
@@ -209,6 +210,7 @@ public class EmployeeService : IEmployeeService
 
     public async Task<AiQueryResponse> AskAiAsync(string question, CancellationToken cancellationToken = default)
     {
+        // External AI helps to interpret natural language; we always compute the final result with real DB queries.
         var query = await _aiProvider.BuildSqlLikeQueryAsync(question, cancellationToken);
         var normalized = query.ToLowerInvariant();
 

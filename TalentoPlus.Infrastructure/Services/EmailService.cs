@@ -29,6 +29,7 @@ public class EmailService : IEmailService
         var pass = _configuration["Smtp__Pass"];
 
         using var client = new SmtpClient();
+        // Real SMTP send; will throw if credentials or host are invalid.
         await client.ConnectAsync(host, port, SecureSocketOptions.StartTls, cancellationToken);
         if (!string.IsNullOrWhiteSpace(user))
         {

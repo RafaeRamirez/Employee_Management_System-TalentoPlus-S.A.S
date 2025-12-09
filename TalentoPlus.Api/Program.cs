@@ -10,6 +10,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Swagger is enabled for both dev and prod to ease testing; secure it externally if needed.
 app.UseSwagger();
 app.UseSwaggerUI();
 

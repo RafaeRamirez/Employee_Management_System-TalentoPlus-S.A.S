@@ -20,6 +20,7 @@ public class MeController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetProfile(CancellationToken cancellationToken)
     {
+        // Employee ID is read from JWT claim to avoid exposing IDs in the URL.
         var employeeId = User.FindFirstValue("employeeId");
         if (string.IsNullOrWhiteSpace(employeeId) || !Guid.TryParse(employeeId, out var id))
         {

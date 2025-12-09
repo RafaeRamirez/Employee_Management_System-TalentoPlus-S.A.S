@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using TalentoPlus.Application.Contracts.Requests;
 using TalentoPlus.Application.Interfaces;
 using TalentoPlus.Domain.Entities;
@@ -60,6 +61,7 @@ public class AuthService : IAuthService
             EmployeeId = employee.Id
         };
 
+        // Create Identity user linked to the employee; Identity handles password hashing/validation.
         var result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
         {
@@ -82,6 +84,7 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Credenciales inválidas");
         }
 
+        // Minimal JWT payload to identify the employee and document on secured endpoints.
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id),

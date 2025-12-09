@@ -20,6 +20,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index(CancellationToken cancellationToken)
     {
+        // Dashboard cards come from aggregated metrics in the service.
         var metrics = await _employeeService.GetDashboardMetricsAsync(cancellationToken);
         var viewModel = new DashboardViewModel
         {

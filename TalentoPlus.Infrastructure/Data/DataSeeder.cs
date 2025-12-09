@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TalentoPlus.Domain.Entities;
 using TalentoPlus.Infrastructure.Identity;
 
@@ -29,6 +30,7 @@ public static class DataSeeder
         var existing = await userManager.FindByEmailAsync(adminEmail);
         if (existing == null)
         {
+            // Seed a default admin for the web UI; credentials should be overridden via env vars.
             var user = new ApplicationUser
             {
                 UserName = adminEmail,

@@ -16,6 +16,7 @@ public class DepartmentRepository : IDepartmentRepository
 
     public async Task<List<Department>> GetAllAsync(CancellationToken cancellationToken = default)
     {
+        // Simple catalog, ordered for predictable dropdowns.
         return await _context.Departments.AsNoTracking().OrderBy(d => d.Name).ToListAsync(cancellationToken);
     }
 

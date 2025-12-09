@@ -3,9 +3,17 @@ using TalentoPlus.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Shared infrastructure (DbContext/Identity/Repositories) for the admin web.
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddAuthorization(options =>
+{
+    // Force authentication everywhere unless explicitly allowed.
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 
 var app = builder.Build();
 

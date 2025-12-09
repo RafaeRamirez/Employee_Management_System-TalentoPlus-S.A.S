@@ -17,6 +17,7 @@ public class DepartmentsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
+        // Public endpoint: provides list of valid departments for registration forms.
         var departments = await _departmentService.GetAllAsync(cancellationToken);
         return Ok(departments);
     }

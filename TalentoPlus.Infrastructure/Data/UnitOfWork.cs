@@ -13,6 +13,7 @@ public class UnitOfWork : IUnitOfWork
 
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        // Single commit point to coordinate multiple repository operations.
         return _context.SaveChangesAsync(cancellationToken);
     }
 }
