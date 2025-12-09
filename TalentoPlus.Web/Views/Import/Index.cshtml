@@ -1,0 +1,25 @@
+@{
+    ViewData["Title"] = "Importar desde Excel";
+}
+
+<div class="container py-4">
+    <h2 class="fw-bold mb-3">Importar empleados desde Excel</h2>
+    <p class="text-muted">Sube el archivo Excel entregado para registrar o actualizar empleados.</p>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">@TempData["Message"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <form asp-action="Upload" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">Archivo Excel (.xlsx)</label>
+            <input type="file" name="file" class="form-control" accept=".xlsx" required />
+        </div>
+        <button class="btn btn-primary">Procesar archivo</button>
+    </form>
+</div>

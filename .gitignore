@@ -1,0 +1,34 @@
+# Build artifacts
+bin/
+obj/
+
+# User secrets
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# VS/VSCode
+.vs/
+.vscode/
+
+# Logs
+*.log
+
+# Dotnet
+project.lock.json
+project.fragment.lock.json
+
+# Env files
+.env
+
+# Coverage
+coverage*/
+TestResults/
+
+# Rider/JetBrains
+.idea/
+
+# macOS / Windows
+.DS_Store
+Thumbs.db

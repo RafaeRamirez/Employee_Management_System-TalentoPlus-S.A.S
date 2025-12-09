@@ -1,0 +1,66 @@
+@model TalentoPlus.Web.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard TalentoPlus";
+}
+
+<div class="container py-4">
+    <div class="d-flex align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold">Panel del Administrador</h1>
+            <p class="text-muted mb-0">Gestión centralizada de empleados y decisiones asistidas por IA.</p>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-uppercase text-muted small mb-1">Total de empleados</p>
+                    <h3 class="fw-bold">@Model.TotalEmployees</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-uppercase text-muted small mb-1">En vacaciones</p>
+                    <h3 class="fw-bold text-warning">@Model.OnVacation</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <p class="text-uppercase text-muted small mb-1">Activos</p>
+                    <h3 class="fw-bold text-success">@Model.ActiveEmployees</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="fw-bold mb-0">Consultas con IA</h5>
+                    <small class="text-muted">Pregunta en lenguaje natural y obtén un resultado basado en la base de datos.</small>
+                </div>
+            </div>
+            <form asp-action="AskAi" method="post" class="mb-3">
+                <div class="input-group">
+                    <input name="question" class="form-control form-control-lg" placeholder="Ej: ¿Cuántos empleados están en Tecnología?" required />
+                    <button type="submit" class="btn btn-primary btn-lg">Consultar</button>
+                </div>
+            </form>
+
+            @if (Model.AiResult != null)
+            {
+                <div class="alert alert-info">
+                    <p class="mb-1"><strong>Pregunta:</strong> @Model.AiResult.Question</p>
+                    <p class="mb-1"><strong>Interpretación:</strong> @Model.AiResult.SqlLikeQuery</p>
+                    <p class="mb-0"><strong>Resultado:</strong> @Model.AiResult.Result</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

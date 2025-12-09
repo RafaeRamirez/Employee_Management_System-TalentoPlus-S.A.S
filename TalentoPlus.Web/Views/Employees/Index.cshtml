@@ -1,0 +1,51 @@
+@model IEnumerable<TalentoPlus.Application.DTOs.EmployeeDto>
+@{
+    ViewData["Title"] = "Empleados";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="fw-bold mb-0">Empleados</h2>
+            <small class="text-muted">Crea, edita o elimina registros.</small>
+        </div>
+        <div>
+            <a asp-action="Create" class="btn btn-primary me-2">Nuevo empleado</a>
+            <a asp-controller="Import" asp-action="Index" class="btn btn-outline-secondary">Importar Excel</a>
+        </div>
+    </div>
+
+    <div class="table-responsive shadow-sm">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Documento</th>
+                    <th>Nombre</th>
+                    <th>Departamento</th>
+                    <th>Cargo</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var emp in Model)
+            {
+                <tr>
+                    <td>@emp.Document</td>
+                    <td>@emp.FirstName @emp.LastName</td>
+                    <td>@emp.DepartmentName</td>
+                    <td>@emp.Position</td>
+                    <td>@emp.Status</td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@emp.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                        <a asp-action="Pdf" asp-route-id="@emp.Id" class="btn btn-sm btn-outline-secondary">PDF</a>
+                        <form asp-action="Delete" asp-route-id="@emp.Id" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Eliminar empleado?')">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

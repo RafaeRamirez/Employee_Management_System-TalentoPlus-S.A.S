@@ -1,0 +1,60 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: talentoplus
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: TalentoPlus.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=talentoplus;Username=postgres;Password=postgres
+      Jwt__Secret: ${JWT_SECRET:-please_change_me_before_running}
+      Jwt__Issuer: TalentoPlus.Api
+      Jwt__Audience: TalentoPlus.Client
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@talentoplus.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
+      Smtp__Host: ${SMTP_HOST:-smtp.mailtrap.io}
+      Smtp__Port: ${SMTP_PORT:-587}
+      Smtp__User: ${SMTP_USER:-user}
+      Smtp__Pass: ${SMTP_PASS:-pass}
+      Smtp__From: ${SMTP_FROM:-no-reply@talentoplus.com}
+    depends_on:
+      - postgres
+    ports:
+      - "5001:8080"
+
+  web:
+    build:
+      context: .
+      dockerfile: TalentoPlus.Web/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=talentoplus;Username=postgres;Password=postgres
+      Jwt__Secret: ${JWT_SECRET:-please_change_me_before_running}
+      Jwt__Issuer: TalentoPlus.Api
+      Jwt__Audience: TalentoPlus.Client
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@talentoplus.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin123!}
+      Smtp__Host: ${SMTP_HOST:-smtp.mailtrap.io}
+      Smtp__Port: ${SMTP_PORT:-587}
+      Smtp__User: ${SMTP_USER:-user}
+      Smtp__Pass: ${SMTP_PASS:-pass}
+      Smtp__From: ${SMTP_FROM:-no-reply@talentoplus.com}
+    depends_on:
+      - postgres
+    ports:
+      - "5000:8080"
+
+volumes:
+  pgdata:
