@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TalentoPlus.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+33a0beaf2b71bad359d77b8225329ef8036471fd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d43a3ae6db7d7aadb5c173acaf5d68b124ccffea")]
 [assembly: System.Reflection.AssemblyProductAttribute("TalentoPlus.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TalentoPlus.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
