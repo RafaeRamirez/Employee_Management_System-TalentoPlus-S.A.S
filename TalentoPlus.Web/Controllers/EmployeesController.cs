@@ -4,6 +4,7 @@ using TalentoPlus.Application.Contracts.Requests;
 using TalentoPlus.Application.Interfaces;
 using TalentoPlus.Web.Models;
 using System.Text;
+using System.Globalization;
 
 namespace TalentoPlus.Web.Controllers;
 
@@ -34,6 +35,18 @@ public class EmployeesController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(EmployeeFormViewModel model, CancellationToken cancellationToken)
     {
+        // Normaliza salario para admitir punto o coma.
+        var salaryRaw = Request.Form["Salary"].ToString();
+        if (!string.IsNullOrWhiteSpace(salaryRaw))
+        {
+            if (decimal.TryParse(salaryRaw, NumberStyles.Any, CultureInfo.CurrentCulture, out var parsed) ||
+                decimal.TryParse(salaryRaw, NumberStyles.Any, CultureInfo.InvariantCulture, out parsed))
+            {
+                model.Salary = parsed;
+                ModelState.Remove(nameof(model.Salary));
+            }
+        }
+
         if (!ModelState.IsValid)
         {
             ViewBag.Departments = await _departmentService.GetAllAsync(cancellationToken);
@@ -91,6 +104,18 @@ public class EmployeesController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit(EmployeeFormViewModel model, CancellationToken cancellationToken)
     {
+        // Normaliza salario para admitir punto o coma.
+        var salaryRaw = Request.Form["Salary"].ToString();
+        if (!string.IsNullOrWhiteSpace(salaryRaw))
+        {
+            if (decimal.TryParse(salaryRaw, NumberStyles.Any, CultureInfo.CurrentCulture, out var parsed) ||
+                decimal.TryParse(salaryRaw, NumberStyles.Any, CultureInfo.InvariantCulture, out parsed))
+            {
+                model.Salary = parsed;
+                ModelState.Remove(nameof(model.Salary));
+            }
+        }
+
         if (!ModelState.IsValid || !model.Id.HasValue)
         {
             ViewBag.Departments = await _departmentService.GetAllAsync(cancellationToken);

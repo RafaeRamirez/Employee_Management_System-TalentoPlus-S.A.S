@@ -214,42 +214,55 @@ public class EmployeeService : IEmployeeService
         // External AI helps to interpret natural language; we always compute the final result with real DB queries.
         var query = await _aiProvider.BuildSqlLikeQueryAsync(question, cancellationToken);
         var normalized = query.ToLowerInvariant();
+        var questionLower = question.ToLowerInvariant();
 
         var result = 0;
-        if (normalized.Contains("departamento"))
-        {
-            var departmentName = ExtractQuotedValue(normalized);
-            if (!string.IsNullOrWhiteSpace(departmentName))
-            {
-                result = await _employeeRepository.CountByDepartmentNameAsync(departmentName, cancellationToken);
-            }
-        }
-        else if (normalized.Contains("estado"))
-        {
-            if (normalized.Contains("inactivo"))
-            {
-                result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Inactive, cancellationToken);
-            }
-            else if (normalized.Contains("vacaciones"))
-            {
-                result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Vacation, cancellationToken);
-            }
-            else
-            {
-                result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Active, cancellationToken);
-            }
-        }
-        else if (normalized.Contains("cargo"))
+        // Cargo tiene prioridad cuando la pregunta menciona explícitamente el rol (ej: auxiliar).
+        if (normalized.Contains("cargo") || questionLower.Contains("auxiliar"))
         {
             var role = ExtractQuotedValue(normalized);
             if (!string.IsNullOrWhiteSpace(role))
             {
                 result = await _employeeRepository.CountByPositionAsync(role, cancellationToken);
             }
+            else if (questionLower.Contains("auxiliar"))
+            {
+                result = await _employeeRepository.CountByPositionAsync("auxiliar", cancellationToken);
+            }
+        }
+        else if (normalized.Contains("departamento"))
+        {
+            var departmentName = ExtractQuotedValue(normalized);
+            if (string.IsNullOrWhiteSpace(departmentName))
+            {
+                departmentName = ExtractDepartmentFromQuestion(questionLower);
+            }
+            if (!string.IsNullOrWhiteSpace(departmentName))
+            {
+                result = await _employeeRepository.CountByDepartmentNameAsync(departmentName, cancellationToken);
+            }
         }
         else
         {
-            result = await _employeeRepository.CountAsync(cancellationToken);
+            if (normalized.Contains("estado"))
+            {
+                if (normalized.Contains("inactivo"))
+                {
+                    result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Inactive, cancellationToken);
+                }
+                else if (normalized.Contains("vacaciones"))
+                {
+                    result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Vacation, cancellationToken);
+                }
+                else
+                {
+                    result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Active, cancellationToken);
+                }
+            }
+            else
+            {
+                result = await _employeeRepository.CountAsync(cancellationToken);
+            }
         }
 
         return new AiQueryResponse
@@ -268,6 +281,34 @@ public class EmployeeService : IEmployeeService
         {
             return text[start..end].Trim('"');
         }
+
+        return string.Empty;
+    }
+
+    private static string ExtractDepartmentFromQuestion(string question)
+    {
+        // Busca "departamento de X" o palabras clave comunes.
+        var idx = question.IndexOf("departamento de");
+        if (idx >= 0)
+        {
+            var tail = question[(idx + "departamento de".Length)..].Trim();
+            var parts = tail.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length > 0)
+            {
+                // toma la primera palabra o combina dos si parece compuesto
+                var candidate = parts[0];
+                if (parts.Length > 1 && parts[1].Length > 3)
+                    candidate = $"{parts[0]} {parts[1]}";
+                return candidate.Trim('.', '?', '!', ',', ';');
+            }
+        }
+
+        if (question.Contains("tecnolog"))
+            return "tecnología";
+        if (question.Contains("recursos humanos"))
+            return "recursos humanos";
+        if (question.Contains("operacion") || question.Contains("operación"))
+            return "operaciones";
 
         return string.Empty;
     }

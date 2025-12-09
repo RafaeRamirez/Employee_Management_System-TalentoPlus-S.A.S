@@ -34,6 +34,78 @@
         </div>
     </div>
 
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="status-column h-100">
+                <div class="status-header">
+                    <h6 class="fw-bold text-success mb-0">Activos (@Model.ActiveList.Count())</h6>
+                </div>
+                <div class="status-list">
+                    @foreach (var e in Model.ActiveList)
+                    {
+                        <div class="status-item">
+                            <div>
+                                <div class="fw-semibold">@e.FirstName @e.LastName</div>
+                                <div class="meta">@e.Position · @e.DepartmentName</div>
+                            </div>
+                            <span class="pill pill-active">Activo</span>
+                        </div>
+                    }
+                    @if (!Model.ActiveList.Any())
+                    {
+                        <div class="text-muted small">Sin registros.</div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="status-column h-100">
+                <div class="status-header">
+                    <h6 class="fw-bold text-warning mb-0">En vacaciones (@Model.VacationList.Count())</h6>
+                </div>
+                <div class="status-list">
+                    @foreach (var e in Model.VacationList)
+                    {
+                        <div class="status-item">
+                            <div>
+                                <div class="fw-semibold">@e.FirstName @e.LastName</div>
+                                <div class="meta">@e.Position · @e.DepartmentName</div>
+                            </div>
+                            <span class="pill pill-vacation">Vacaciones</span>
+                        </div>
+                    }
+                    @if (!Model.VacationList.Any())
+                    {
+                        <div class="text-muted small">Sin registros.</div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="status-column h-100">
+                <div class="status-header">
+                    <h6 class="fw-bold text-secondary mb-0">Inactivos (@Model.InactiveList.Count())</h6>
+                </div>
+                <div class="status-list">
+                    @foreach (var e in Model.InactiveList)
+                    {
+                        <div class="status-item">
+                            <div>
+                                <div class="fw-semibold">@e.FirstName @e.LastName</div>
+                                <div class="meta">@e.Position · @e.DepartmentName</div>
+                            </div>
+                            <span class="pill pill-inactive">Inactivo</span>
+                        </div>
+                    }
+                    @if (!Model.InactiveList.Any())
+                    {
+                        <div class="text-muted small">Sin registros.</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 gap-2">

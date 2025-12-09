@@ -41,6 +41,11 @@ Create your env file: `cp .env.example .env` and replace secrets (especially `Jw
   `Documento, Nombres, Apellidos, FechaNacimiento, Direccion, Telefono, Email, Cargo, Salario, FechaIngreso, Estado, NivelEducativo, PerfilProfesional, Departamento`
 - Current model ignores `FechaNacimiento` (not stored); the rest are mapped and upserted. Departments are created on the fly if they do not exist.
 
+## IA (Gemini or other provider)
+- Configurable external model via `AI__ApiUrl` and `AI__ApiKey` (e.g., Gemini `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent`).
+- The model only interprets the intent (departamento/estado/cargo/todos) and the final count is always computed against the real database (no hallucinated data).
+- If the AI endpoint/key is missing or fails, a deterministic heuristic is used.
+
 ## API overview
 - Public:
   - `GET /api/departments`
@@ -67,6 +72,7 @@ dotnet run --project TalentoPlus.Api   # REST API
 - AI section calls configurable endpoint; if unset, heuristic parsing is used to avoid hallucinations.
 - QuestPDF license is set to Community at startup (no key required). CVs download directly with a timestamped filename to avoid cache.
 - If EF tools are unavailable, you can apply `schema.sql` directly: `psql -h localhost -p 5432 -U postgres -d talentoplus -f schema.sql` (adjust port if using Docker host 5433).
+- UI tweaks: responsive forms, enhanced textarea for “Perfil profesional”, and consistent styling across devices.
 
 ## Setup quick steps
 1) Clone: `git clone https://github.com/RafaeRamirez/Employee_Management_System-TalentoPlus-S.A.S.git`

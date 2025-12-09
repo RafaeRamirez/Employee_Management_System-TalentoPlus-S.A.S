@@ -22,20 +22,32 @@ public class HomeController : Controller
     {
         // Dashboard cards come from aggregated metrics in the service.
         var metrics = await _employeeService.GetDashboardMetricsAsync(cancellationToken);
+        var all = await _employeeService.GetAllAsync(cancellationToken);
         var viewModel = new DashboardViewModel
         {
             TotalEmployees = metrics.GetValueOrDefault("total"),
             OnVacation = metrics.GetValueOrDefault("vacation"),
-            ActiveEmployees = metrics.GetValueOrDefault("active")
+            ActiveEmployees = metrics.GetValueOrDefault("active"),
+            ActiveList = all.Where(e => e.Status == Domain.Enums.EmployeeStatus.Active),
+            InactiveList = all.Where(e => e.Status == Domain.Enums.EmployeeStatus.Inactive),
+            VacationList = all.Where(e => e.Status == Domain.Enums.EmployeeStatus.Vacation)
         };
 
         return View(viewModel);
+    }
+
+    [HttpGet]
+    public IActionResult AskAi()
+    {
+        // Avoid 405 on direct GET: redirect to dashboard.
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]
     public async Task<IActionResult> AskAi(string question, CancellationToken cancellationToken)
     {
         var metrics = await _employeeService.GetDashboardMetricsAsync(cancellationToken);
+        var all = await _employeeService.GetAllAsync(cancellationToken);
         var response = await _employeeService.AskAiAsync(question, cancellationToken);
 
         var viewModel = new DashboardViewModel
@@ -43,7 +55,10 @@ public class HomeController : Controller
             TotalEmployees = metrics.GetValueOrDefault("total"),
             OnVacation = metrics.GetValueOrDefault("vacation"),
             ActiveEmployees = metrics.GetValueOrDefault("active"),
-            AiResult = response
+            AiResult = response,
+            ActiveList = all.Where(e => e.Status == Domain.Enums.EmployeeStatus.Active),
+            InactiveList = all.Where(e => e.Status == Domain.Enums.EmployeeStatus.Inactive),
+            VacationList = all.Where(e => e.Status == Domain.Enums.EmployeeStatus.Vacation)
         };
 
         return View("Index", viewModel);

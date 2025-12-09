@@ -4,21 +4,26 @@
 }
 
 <div class="row">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
     <div class="col-md-6 mb-3">
         <label class="form-label">Documento</label>
         <input asp-for="Document" class="form-control" />
+        <span asp-validation-for="Document" class="text-danger"></span>
     </div>
     <div class="col-md-6 mb-3">
         <label class="form-label">Correo</label>
         <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div class="col-md-6 mb-3">
         <label class="form-label">Nombres</label>
         <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
     </div>
     <div class="col-md-6 mb-3">
         <label class="form-label">Apellidos</label>
         <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
     </div>
     <div class="col-md-6 mb-3">
         <label class="form-label">Teléfono</label>
@@ -34,11 +39,14 @@
     </div>
     <div class="col-md-6 mb-3">
         <label class="form-label">Salario</label>
-        <input asp-for="Salary" class="form-control" type="number" step="0.01" />
+        <input asp-for="Salary" class="form-control" type="text" inputmode="decimal" />
+        <span class="text-muted small">Usa punto o coma para decimales.</span>
+        <span asp-validation-for="Salary" class="text-danger"></span>
     </div>
     <div class="col-md-6 mb-3">
         <label class="form-label">Fecha de ingreso</label>
         <input asp-for="HireDate" class="form-control" type="date" />
+        <span asp-validation-for="HireDate" class="text-danger"></span>
     </div>
     <div class="col-md-6 mb-3">
         <label class="form-label">Estado</label>
@@ -58,7 +66,10 @@
         </select>
     </div>
     <div class="col-12 mb-3">
-        <label class="form-label">Perfil profesional</label>
-        <textarea asp-for="Profile" class="form-control" rows="3"></textarea>
+        <div class="d-flex justify-content-between align-items-center mb-1 textarea-label">
+            <label class="form-label mb-0">Perfil profesional</label>
+            <small class="text-muted">Describe habilidades, enfoque y logros.</small>
+        </div>
+        <textarea asp-for="Profile" class="form-control" rows="4" placeholder="Ej: Alta capacidad de aprendizaje, resolución de problemas y enfoque en automatización."></textarea>
     </div>
 </div>
