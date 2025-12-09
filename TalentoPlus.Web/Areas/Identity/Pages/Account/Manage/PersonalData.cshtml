@@ -1,0 +1,22 @@
+@page
+@model TalentoPlus.Web.Areas.Identity.Pages.Account.Manage.PersonalDataModel
+@{
+    ViewData["Title"] = "Datos personales";
+    ViewData["ActivePage"] = "PersonalData";
+}
+
+<h3 class="fw-bold">@ViewData["Title"]</h3>
+<p class="text-muted">
+    Tu cuenta contiene datos personales que has proporcionado. Desde aquí puedes descargar una copia
+    o eliminar la cuenta de forma permanente.
+</p>
+<div class="alert alert-warning">
+    <strong>Advertencia:</strong> al eliminar la cuenta se borrarán todos tus datos y no se podrán recuperar.
+</div>
+
+<form asp-page-handler="Download" method="post" class="mb-3">
+    <button class="btn btn-outline-primary" type="submit">Descargar mis datos</button>
+</form>
+<form asp-page-handler="Delete" method="post">
+    <button class="btn btn-outline-danger" type="submit">Eliminar mi cuenta</button>
+</form>

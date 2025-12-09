@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TalentoPlus.Application.Contracts.Requests;
 using TalentoPlus.Application.Interfaces;
 using TalentoPlus.Web.Models;
+using System.Text;
 
 namespace TalentoPlus.Web.Controllers;
 
@@ -57,6 +58,7 @@ public class EmployeesController : Controller
         };
 
         await _employeeService.CreateAsync(request, cancellationToken);
+        TempData["SuccessMessage"] = $"Empleado {model.FirstName} {model.LastName} creado correctamente.";
         return RedirectToAction(nameof(Index));
     }
 
@@ -128,6 +130,44 @@ public class EmployeesController : Controller
     public async Task<IActionResult> Pdf(Guid id, CancellationToken cancellationToken)
     {
         var pdf = await _employeeService.GeneratePdfAsync(id, cancellationToken);
-        return File(pdf, "application/pdf", "HojaDeVida.pdf");
+        // Sólo descarga; se puede usar un nombre único para evitar caché y reflejar actualizaciones.
+        var fileName = $"HojaDeVida-{DateTime.UtcNow:yyyyMMddHHmmss}.pdf";
+        return File(pdf, "application/pdf", fileName);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Export(CancellationToken cancellationToken)
+    {
+        var employees = await _employeeService.GetAllAsync(cancellationToken);
+        var sb = new StringBuilder();
+        sb.AppendLine("Documento,Nombres,Apellidos,FechaNacimiento,Direccion,Telefono,Email,Cargo,Salario,FechaIngreso,Estado,NivelEducativo,PerfilProfesional,Departamento");
+
+        foreach (var e in employees)
+        {
+            // CSV simple con comas; se escapan comillas dobles.
+            string Escape(string? value) => $"\"{(value ?? string.Empty).Replace("\"", "\"\"")}\"";
+
+            sb.AppendLine(string.Join(",", new[]
+            {
+                Escape(e.Document),
+                Escape(e.FirstName),
+                Escape(e.LastName),
+                string.Empty, // FechaNacimiento no almacenada
+                Escape(e.Address),
+                Escape(e.Phone),
+                Escape(e.Email),
+                Escape(e.Position),
+                e.Salary.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                e.HireDate.ToString("yyyy-MM-dd"),
+                Escape(e.Status.ToString()),
+                Escape(e.EducationLevel.ToString()),
+                Escape(e.Profile),
+                Escape(e.DepartmentName)
+            }));
+        }
+
+        var bytes = Encoding.UTF8.GetBytes(sb.ToString());
+        var fileName = $"Empleados-{DateTime.UtcNow:yyyyMMddHHmmss}.csv";
+        return File(bytes, "text/csv", fileName);
     }
 }

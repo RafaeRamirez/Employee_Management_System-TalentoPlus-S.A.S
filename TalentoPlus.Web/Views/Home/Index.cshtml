@@ -3,55 +3,63 @@
     ViewData["Title"] = "Dashboard TalentoPlus";
 }
 
-<div class="container py-4">
-    <div class="d-flex align-items-center mb-4">
+<div class="page-shell">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3">
         <div>
-            <h1 class="fw-bold">Panel del Administrador</h1>
-            <p class="text-muted mb-0">Gestión centralizada de empleados y decisiones asistidas por IA.</p>
+            <div class="badge bg-primary text-uppercase mb-2">TalentoPlus · Dashboard</div>
+            <h1 class="fw-bold mb-1">Panel del Administrador</h1>
+            <p class="text-muted mb-0">Visibilidad completa de RRHH y preguntas en lenguaje natural con IA.</p>
+        </div>
+        <div class="text-md-end">
+            <small class="text-muted d-block">Última actualización</small>
+            <span class="fw-semibold">@DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm") UTC</span>
         </div>
     </div>
 
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <p class="text-uppercase text-muted small mb-1">Total de empleados</p>
-                    <h3 class="fw-bold">@Model.TotalEmployees</h3>
-                </div>
-            </div>
+    <div class="stat-grid mb-4">
+        <div class="stat-card" style="background: linear-gradient(135deg,#0ea5e9,#6366f1);">
+            <h3>Total de empleados</h3>
+            <div class="value">@Model.TotalEmployees</div>
+            <small>Base consolidada en PostgreSQL</small>
         </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <p class="text-uppercase text-muted small mb-1">En vacaciones</p>
-                    <h3 class="fw-bold text-warning">@Model.OnVacation</h3>
-                </div>
-            </div>
+        <div class="stat-card" style="background: linear-gradient(135deg,#f59e0b,#f97316);">
+            <h3>En vacaciones</h3>
+            <div class="value">@Model.OnVacation</div>
+            <small>Planifica retornos y backfills</small>
         </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body">
-                    <p class="text-uppercase text-muted small mb-1">Activos</p>
-                    <h3 class="fw-bold text-success">@Model.ActiveEmployees</h3>
-                </div>
-            </div>
+        <div class="stat-card" style="background: linear-gradient(135deg,#22c55e,#16a34a);">
+            <h3>Activos</h3>
+            <div class="value">@Model.ActiveEmployees</div>
+            <small>Disponibles para asignaciones</small>
         </div>
     </div>
 
     <div class="card shadow-sm border-0">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 gap-2">
                 <div>
                     <h5 class="fw-bold mb-0">Consultas con IA</h5>
-                    <small class="text-muted">Pregunta en lenguaje natural y obtén un resultado basado en la base de datos.</small>
+                    <small class="text-muted">Pregunta en lenguaje natural y obtenemos el número real desde la base.</small>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <span class="badge bg-light text-dark border">departamento</span>
+                    <span class="badge bg-light text-dark border">estado</span>
+                    <span class="badge bg-light text-dark border">cargo</span>
                 </div>
             </div>
+
             <form asp-action="AskAi" method="post" class="mb-3">
-                <div class="input-group">
-                    <input name="question" class="form-control form-control-lg" placeholder="Ej: ¿Cuántos empleados están en Tecnología?" required />
-                    <button type="submit" class="btn btn-primary btn-lg">Consultar</button>
+                <div class="input-group input-group-lg">
+                    <input name="question" class="form-control" placeholder="Ej: ¿Cuántos empleados pertenecen a Tecnología?" required />
+                    <button type="submit" class="btn btn-primary">Consultar</button>
                 </div>
             </form>
+
+            <div class="d-flex gap-2 flex-wrap mb-3">
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillPrompt('¿Cuántos auxiliares hay en la plataforma?')">Auxiliares</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillPrompt('¿Cuántos empleados pertenecen al departamento de Tecnología?')">Departamento Tecnología</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillPrompt('¿Cuántos empleados están en estado Inactivo?')">Inactivos</button>
+            </div>
 
             @if (Model.AiResult != null)
             {
@@ -64,3 +72,15 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function fillPrompt(text) {
+            const input = document.querySelector('input[name="question"]');
+            if (input) {
+                input.value = text;
+                input.focus();
+            }
+        }
+    </script>
+}

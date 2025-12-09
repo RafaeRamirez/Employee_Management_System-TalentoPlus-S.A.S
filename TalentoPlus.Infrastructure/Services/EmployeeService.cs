@@ -42,6 +42,7 @@ public class EmployeeService : IEmployeeService
 
     public async Task<EmployeeDto> CreateAsync(EmployeeCreateRequest request, CancellationToken cancellationToken = default)
     {
+        var hireDate = DateTime.SpecifyKind(request.HireDate, DateTimeKind.Utc);
         var entity = new Employee
         {
             Id = Guid.NewGuid(),
@@ -53,7 +54,7 @@ public class EmployeeService : IEmployeeService
             Address = request.Address,
             Position = request.Position,
             Salary = request.Salary,
-            HireDate = request.HireDate,
+            HireDate = hireDate,
             Status = request.Status,
             EducationLevel = request.EducationLevel,
             Profile = request.Profile,
@@ -79,7 +80,7 @@ public class EmployeeService : IEmployeeService
         entity.Address = request.Address;
         entity.Position = request.Position;
         entity.Salary = request.Salary;
-        entity.HireDate = request.HireDate;
+        entity.HireDate = DateTime.SpecifyKind(request.HireDate, DateTimeKind.Utc);
         entity.Status = request.Status;
         entity.EducationLevel = request.EducationLevel;
         entity.Profile = request.Profile;
@@ -107,17 +108,11 @@ public class EmployeeService : IEmployeeService
         using var workbook = new XLWorkbook(stream);
         var worksheet = workbook.Worksheets.First();
 
-        var headers = worksheet.Row(1).Cells().Select(c => c.GetString().Trim()).ToList();
-        var expected = new[]
+        // Validación básica: al menos 13 columnas con datos para mantener la estructura Documento..Departamento.
+        var columnCount = worksheet.Row(1).CellsUsed().Count();
+        if (columnCount < 14)
         {
-            "Documento","Nombres","Apellidos","Correo","Telefono","Direccion","Cargo","Salario","FechaIngreso","Estado","NivelEducativo","Perfil","Departamento"
-        };
-        foreach (var col in expected)
-        {
-            if (!headers.Contains(col))
-            {
-                throw new InvalidOperationException($"Columna requerida no encontrada: {col}");
-            }
+            throw new InvalidOperationException("El archivo no tiene el número de columnas esperado (mínimo 14).");
         }
 
         // Each row becomes an upsert: create department if missing, update existing employee by Document or insert if new.
@@ -126,7 +121,11 @@ public class EmployeeService : IEmployeeService
             var document = row.Cell("A").GetString().Trim();
             if (string.IsNullOrWhiteSpace(document)) continue;
 
-            var departmentName = row.Cell("M").GetString().Trim();
+            // New layout:
+            // A Documento, B Nombres, C Apellidos, D FechaNacimiento (ignorado), E Direccion,
+            // F Telefono, G Email, H Cargo, I Salario, J FechaIngreso, K Estado,
+            // L NivelEducativo, M PerfilProfesional, N Departamento.
+            var departmentName = row.Cell("N").GetString().Trim();
             var department = await _departmentRepository.GetByNameAsync(departmentName, cancellationToken);
             if (department == null)
             {
@@ -140,15 +139,17 @@ public class EmployeeService : IEmployeeService
 
             employee.FirstName = row.Cell("B").GetString();
             employee.LastName = row.Cell("C").GetString();
-            employee.Email = row.Cell("D").GetString();
-            employee.Phone = row.Cell("E").GetString();
-            employee.Address = row.Cell("F").GetString();
-            employee.Position = row.Cell("G").GetString();
-            employee.Salary = decimal.TryParse(row.Cell("H").GetString(), CultureInfo.InvariantCulture, out var salary) ? salary : 0;
-            employee.HireDate = DateTime.TryParse(row.Cell("I").GetString(), out var hire) ? hire : DateTime.UtcNow.Date;
-            employee.Status = Enum.TryParse<EmployeeStatus>(row.Cell("J").GetString(), true, out var status) ? status : EmployeeStatus.Active;
-            employee.EducationLevel = Enum.TryParse<EducationLevel>(row.Cell("K").GetString(), true, out var edu) ? edu : EducationLevel.None;
-            employee.Profile = row.Cell("L").GetString();
+            // FechaNacimiento en columna D (no se almacena en el modelo actual, se ignora).
+            employee.Address = row.Cell("E").GetString();
+            employee.Phone = row.Cell("F").GetString();
+            employee.Email = row.Cell("G").GetString();
+            employee.Position = row.Cell("H").GetString();
+            employee.Salary = decimal.TryParse(row.Cell("I").GetString(), CultureInfo.InvariantCulture, out var salary) ? salary : 0;
+            var parsedHire = DateTime.TryParse(row.Cell("J").GetString(), out var hire) ? hire : DateTime.UtcNow.Date;
+            employee.HireDate = DateTime.SpecifyKind(parsedHire, DateTimeKind.Utc);
+            employee.Status = Enum.TryParse<EmployeeStatus>(row.Cell("K").GetString(), true, out var status) ? status : EmployeeStatus.Active;
+            employee.EducationLevel = Enum.TryParse<EducationLevel>(row.Cell("L").GetString(), true, out var edu) ? edu : EducationLevel.None;
+            employee.Profile = row.Cell("M").GetString();
             employee.DepartmentId = department.Id;
 
             if (isNew)

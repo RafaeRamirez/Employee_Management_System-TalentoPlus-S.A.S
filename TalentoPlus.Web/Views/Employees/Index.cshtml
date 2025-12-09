@@ -10,10 +10,18 @@
             <small class="text-muted">Crea, edita o elimina registros.</small>
         </div>
         <div>
+            <a asp-action="Export" class="btn btn-outline-secondary me-2">Exportar CSV</a>
             <a asp-action="Create" class="btn btn-primary me-2">Nuevo empleado</a>
             <a asp-controller="Import" asp-action="Index" class="btn btn-outline-secondary">Importar Excel</a>
         </div>
     </div>
+
+    @if (TempData["SuccessMessage"] is string success)
+    {
+        <div class="alert alert-success shadow-sm border-0">
+            @success
+        </div>
+    }
 
     <div class="table-responsive shadow-sm">
         <table class="table table-hover align-middle mb-0">

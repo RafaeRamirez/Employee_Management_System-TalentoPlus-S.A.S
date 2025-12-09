@@ -1,22 +1,141 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
+html, body {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at 20% 20%, #f1f5ff, #f8fafc 45%, #eef2ff 100%);
+  color: #0f172a;
   min-height: 100%;
 }
 
-body {
-  margin-bottom: 60px;
+a {
+  text-decoration: none;
+}
+
+.navbar {
+  background: linear-gradient(90deg, #0f172a, #1d2b48);
+}
+
+.navbar .nav-link,
+.navbar-brand,
+.navbar .btn-link {
+  color: #e2e8f0 !important;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:hover {
+  color: #a5b4fc !important;
+}
+
+.brand-badge {
+  background: linear-gradient(135deg, #a855f7, #6366f1);
+  color: #fff;
+  padding: 0.35rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.page-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 18px 40px -24px rgba(15, 23, 42, 0.35);
+  background: #ffffffd9;
+  backdrop-filter: blur(4px);
+}
+
+.card-header {
+  border: none;
+  background: transparent;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 14px 35px -18px rgba(99, 102, 241, 0.8);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  padding: 1.2rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  color: #f8fafc;
+  box-shadow: 0 15px 35px -20px rgba(14, 165, 233, 0.8);
+}
+
+.stat-card h3 {
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.stat-card .value {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+}
+
+.table thead th {
+  border: none;
+  color: #475569;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.table tbody tr {
+  background: #fff;
+  box-shadow: 0 8px 25px -18px rgba(15, 23, 42, 0.35);
+  border-radius: 12px;
+}
+
+.table tbody td {
+  border: none;
+  padding: 0.9rem 1rem;
+  vertical-align: middle;
+}
+
+.form-control {
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  padding: 0.7rem 0.9rem;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+  border: 2px dashed #e2e8f0;
+  border-radius: 14px;
+}
+
+footer {
+  background: transparent;
+  color: #475569;
 }

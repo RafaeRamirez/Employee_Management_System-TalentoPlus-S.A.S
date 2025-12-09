@@ -1,7 +1,7 @@
 # TalentoPlus Employee Management System
 
 Modern ASP.NET Core 8 solution for TalentoPlus S.A.S. with:
-- Admin web (MVC + Identity) in Spanish for HR to CRUD employees, import Excel, generate PDF CV, dashboard and AI-assisted queries.
+- Admin web (MVC + Identity) in Spanish for HR to CRUD employees, import Excel, generate PDF CV (download-only), dashboard and AI-assisted queries.
 - Public/secure REST API with JWT for employees to self-register, login, read profile, and download their own PDF.
 - PostgreSQL persistence, Docker Compose for full stack, environment-driven configuration, and automated tests (unit + integration).
 
@@ -19,7 +19,7 @@ docker compose up --build
 3) Apps:
    - Web admin: http://localhost:5000
    - REST API swagger: http://localhost:5001/swagger
-   - PostgreSQL: localhost:5432 (database `talentoplus`)
+   - PostgreSQL: host `localhost`, port `5433` (maps to container 5432), database `talentoplus`
 
 ### Environment variables
 Override via `.env` or CLI:
@@ -29,6 +29,7 @@ Override via `.env` or CLI:
 - `ADMIN_EMAIL`, `ADMIN_PASSWORD` (seeded Identity admin for web)
 - SMTP: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`
 - AI: `AI__ApiUrl`, `AI__ApiKey` (optional; falls back to heuristics if empty)
+ - Docker DB host port: `POSTGRES_HOST_PORT` (defaults to 5433 on host)
 Create your env file: `cp .env.example .env` and replace secrets (especially `Jwt__Secret`, DB password, SMTP).
 
 ## Credentials
@@ -36,9 +37,9 @@ Create your env file: `cp .env.example .env` and replace secrets (especially `Jw
 - Employee login (API): uses `document` + `password` chosen at self-registration.
 
 ## Excel import
-- Upload from web (`/Import`). Expected headers (row 1):
-  `Documento, Nombres, Apellidos, Correo, Telefono, Direccion, Cargo, Salario, FechaIngreso, Estado, NivelEducativo, Perfil, Departamento`
-- Departments are created on the fly if they do not exist.
+- Upload from web (`/Import`). First row must contain at least 14 columns in the order:
+  `Documento, Nombres, Apellidos, FechaNacimiento, Direccion, Telefono, Email, Cargo, Salario, FechaIngreso, Estado, NivelEducativo, PerfilProfesional, Departamento`
+- Current model ignores `FechaNacimiento` (not stored); the rest are mapped and upserted. Departments are created on the fly if they do not exist.
 
 ## API overview
 - Public:
@@ -64,6 +65,8 @@ dotnet run --project TalentoPlus.Api   # REST API
 ## Notes
 - SMTP sends real emails; configure valid credentials before running `POST /api/auth/register`.
 - AI section calls configurable endpoint; if unset, heuristic parsing is used to avoid hallucinations.
+- QuestPDF license is set to Community at startup (no key required). CVs download directly with a timestamped filename to avoid cache.
+- If EF tools are unavailable, you can apply `schema.sql` directly: `psql -h localhost -p 5432 -U postgres -d talentoplus -f schema.sql` (adjust port if using Docker host 5433).
 
 ## Setup quick steps
 1) Clone: `git clone https://github.com/RafaeRamirez/Employee_Management_System-TalentoPlus-S.A.S.git`
@@ -77,4 +80,4 @@ dotnet run --project TalentoPlus.Api   # REST API
 - Clan: caiman
 - Path: C#
 - Name: Rafael Augusto Ramirez Bolaño
-- Email: rafar1129qgmail.com
+- Email: rafar1129@gmail.com

@@ -1,5 +1,10 @@
 using TalentoPlus.Infrastructure;
 using TalentoPlus.Infrastructure.Data;
+using QuestPDF.Infrastructure;
+using QuestPDF;
+
+// QuestPDF license (Community) must be set before any document generation.
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
