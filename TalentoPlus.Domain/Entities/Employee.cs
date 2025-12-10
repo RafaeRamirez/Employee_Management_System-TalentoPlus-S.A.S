@@ -20,4 +20,5 @@ public class Employee
     public Guid DepartmentId { get; set; }
     public Department? Department { get; set; }
     public string? UserId { get; set; }
+    public string? OwnerUserId { get; set; }
 }

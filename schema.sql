@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS "Employees" (
     "Profile" character varying(1000) NOT NULL,
     "DepartmentId" uuid NOT NULL,
     "UserId" text,
+    "OwnerUserId" text,
     CONSTRAINT "FK_Employees_Departments_DepartmentId" FOREIGN KEY ("DepartmentId") REFERENCES "Departments" ("Id") ON DELETE CASCADE
 );
 

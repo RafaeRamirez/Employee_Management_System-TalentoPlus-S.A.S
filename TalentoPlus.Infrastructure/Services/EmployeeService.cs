@@ -30,7 +30,7 @@ public class EmployeeService : IEmployeeService
 
     public async Task<IEnumerable<EmployeeDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var employees = await _employeeRepository.GetAllAsync(cancellationToken);
+        var employees = await _employeeRepository.GetAllAsync(null, cancellationToken);
         return employees.Select(MapToDto);
     }
 
@@ -197,9 +197,9 @@ public class EmployeeService : IEmployeeService
 
     public async Task<Dictionary<string, int>> GetDashboardMetricsAsync(CancellationToken cancellationToken = default)
     {
-        var total = await _employeeRepository.CountAsync(cancellationToken);
-        var vacation = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Vacation, cancellationToken);
-        var active = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Active, cancellationToken);
+        var total = await _employeeRepository.CountAsync(null, cancellationToken);
+        var vacation = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Vacation, null, cancellationToken);
+        var active = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Active, null, cancellationToken);
 
         return new Dictionary<string, int>
         {
@@ -223,11 +223,11 @@ public class EmployeeService : IEmployeeService
             var role = ExtractQuotedValue(normalized);
             if (!string.IsNullOrWhiteSpace(role))
             {
-                result = await _employeeRepository.CountByPositionAsync(role, cancellationToken);
+                result = await _employeeRepository.CountByPositionAsync(role, null, cancellationToken);
             }
             else if (questionLower.Contains("auxiliar"))
             {
-                result = await _employeeRepository.CountByPositionAsync("auxiliar", cancellationToken);
+                result = await _employeeRepository.CountByPositionAsync("auxiliar", null, cancellationToken);
             }
         }
         else if (normalized.Contains("departamento"))
@@ -239,7 +239,7 @@ public class EmployeeService : IEmployeeService
             }
             if (!string.IsNullOrWhiteSpace(departmentName))
             {
-                result = await _employeeRepository.CountByDepartmentNameAsync(departmentName, cancellationToken);
+                result = await _employeeRepository.CountByDepartmentNameAsync(departmentName, null, cancellationToken);
             }
         }
         else
@@ -248,20 +248,20 @@ public class EmployeeService : IEmployeeService
             {
                 if (normalized.Contains("inactivo"))
                 {
-                    result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Inactive, cancellationToken);
+                    result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Inactive, null, cancellationToken);
                 }
                 else if (normalized.Contains("vacaciones"))
                 {
-                    result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Vacation, cancellationToken);
+                    result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Vacation, null, cancellationToken);
                 }
                 else
                 {
-                    result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Active, cancellationToken);
+                    result = await _employeeRepository.CountByStatusAsync(EmployeeStatus.Active, null, cancellationToken);
                 }
             }
             else
             {
-                result = await _employeeRepository.CountAsync(cancellationToken);
+                result = await _employeeRepository.CountAsync(null, cancellationToken);
             }
         }
 
