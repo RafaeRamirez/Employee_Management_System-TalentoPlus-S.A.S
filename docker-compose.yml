@@ -5,6 +5,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: talentoplus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     ports:
       # Use a non-default host port to avoid conflicts; override with POSTGRES_HOST_PORT if needed.
       - "${POSTGRES_HOST_PORT:-5433}:5432"
@@ -29,9 +34,11 @@ services:
       Smtp__Pass: ${SMTP_PASS:-pass}
       Smtp__From: ${SMTP_FROM:-no-reply@talentoplus.com}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "5001:8080"
+    restart: on-failure
 
   web:
     build:
@@ -51,9 +58,11 @@ services:
       Smtp__Pass: ${SMTP_PASS:-pass}
       Smtp__From: ${SMTP_FROM:-no-reply@talentoplus.com}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "5000:8080"
+    restart: on-failure
 
 volumes:
   pgdata:
